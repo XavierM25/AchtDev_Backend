@@ -8,12 +8,11 @@ const authenticate = require('./middleware/authMiddleware');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Configuración de CORS
 app.use(cors({
-    origin: ['http://localhost:4321', 'http://localhost:3000'],
+    origin: 'http://localhost:4321', // Tu URL de frontend
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
+    credentials: true // Importante
 }));
 
 app.use(cookieParser()); // Usa cookie-parser antes que tus rutas
@@ -26,7 +25,6 @@ mongoose.connect(process.env.MONGODB_URI)
 
 app.use('/api/users', require('./routes/userRoutes'));
 
-// Usa el middleware de autenticación en las rutas protegidas
 app.use('/api/protected', authenticate, require('./routes/protectedRoutes.js'));
 
 app.listen(PORT, () => {
